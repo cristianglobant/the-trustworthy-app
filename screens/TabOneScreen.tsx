@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {useEffect} from 'react';
-import {Button, Linking, StyleSheet} from 'react-native';
+import {Button, StyleSheet} from 'react-native';
 import * as Linking2 from 'expo-linking';
 
 import EditScreenInfo from '../components/EditScreenInfo';
@@ -11,7 +11,7 @@ export default function TabOneScreen() {
 
     const _handleOpenWithLinking = () => {
         // Linking.openURL('https://expo.io');
-        Linking.openURL('twitter://post?message=hello%20world');
+        Linking2.openURL('twitter://post?message=hello%20world');
     };
 
     const _handleOpenWithWebBrowser = () => {
