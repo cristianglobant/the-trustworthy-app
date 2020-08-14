@@ -28,16 +28,16 @@ export default function TabOneScreen() {
     };
 
     useEffect(() => {
-        Linking.addEventListener('url', _handleUrl);
-        Linking.getInitialURL()
-            .then(url => {
-                console.log("App was closed success", {url});
+        Linking2.addEventListener('url', _handleUrl);
+        Linking2.parseInitialURLAsync()
+            .then(data => {
+                console.log("App was closed success", {data});
                 alert("App was closed");
             })
             .catch(error => {
                 console.error("App was closed failed", {error});
             });
-        return () => Linking.removeEventListener('url', _handleUrl);
+        return () => Linking2.removeEventListener('url', _handleUrl);
     }, []);
 
     return (
