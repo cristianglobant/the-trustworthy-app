@@ -1,13 +1,31 @@
 import * as React from 'react';
-import {useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import {Button, StyleSheet} from 'react-native';
 import * as Linking2 from 'expo-linking';
-
+import Auth0 from 'react-native-auth0';
 import EditScreenInfo from '../components/EditScreenInfo';
 import {Text, View} from '../components/Themed';
 import * as WebBrowser from 'expo-web-browser';
 
+const auth0 = new Auth0({domain: '', clientId: ''});
+
 export default function TabOneScreen() {
+
+    const [accessToken, setAccessToken] = useState('');
+
+    const _presentLogin = () => {
+        auth0
+            .webAuth
+            .authorize({scope: 'openid profile email'})
+            .then(credentials => {
+                    // Successfully authenticated
+                    // Store the accessToken
+                    console.log("Authentication succeeded", {credentials});
+                    setAccessToken(credentials.accessToken)
+                }
+            )
+            .catch(error => console.error('Authentication failed', error));
+    };
 
     const _handleOpenWithLinking = () => {
         // Linking.openURL('https://expo.io');
@@ -18,11 +36,10 @@ export default function TabOneScreen() {
         WebBrowser.openBrowserAsync('https://expo.io');
     };
 
-
     const _handleUrl = (event: { url: string }) => {
         console.log("App already open", {event});
         const parsed = Linking2.parse(event.url);
-        const { path, queryParams } = parsed;
+        const {path, queryParams} = parsed;
         console.log("Parsed", {parsed});
         alert(`Linked to app with path: ${path} and data: ${JSON.stringify(queryParams)}`);
     };
@@ -42,7 +59,12 @@ export default function TabOneScreen() {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Tab Onex</Text>
+            <Text style={styles.title}>Tab One</Text>
+            <Text>Access token: "{accessToken}"</Text>
+            <Button
+                title="Login"
+                onPress={_presentLogin}
+            />
             <Button
                 title="ReactNative.Linking"
                 onPress={_handleOpenWithLinking}
