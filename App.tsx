@@ -1,3 +1,3 @@
-import {OriginalApp as App} from './OriginalApp';
+import App from './Auth0App';
 
 export default App;
