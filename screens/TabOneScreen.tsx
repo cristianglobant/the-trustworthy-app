@@ -1,5 +1,7 @@
 import * as React from 'react';
+import {useEffect} from 'react';
 import {Button, Linking, StyleSheet} from 'react-native';
+import * as Linking2 from 'expo-linking';
 
 import EditScreenInfo from '../components/EditScreenInfo';
 import {Text, View} from '../components/Themed';
@@ -15,6 +17,28 @@ export default function TabOneScreen() {
     const _handleOpenWithWebBrowser = () => {
         WebBrowser.openBrowserAsync('https://expo.io');
     };
+
+
+    const _handleUrl = (event: { url: string }) => {
+        console.log("App already open", {event});
+        const parsed = Linking2.parse(event.url);
+        const { path, queryParams } = parsed;
+        console.log("Parsed", {parsed});
+        alert(`Linked to app with path: ${path} and data: ${JSON.stringify(queryParams)}`);
+    };
+
+    useEffect(() => {
+        Linking.addEventListener('url', _handleUrl);
+        Linking.getInitialURL()
+            .then(url => {
+                console.log("App was closed success", {url});
+                alert("App was closed");
+            })
+            .catch(error => {
+                console.error("App was closed failed", {error});
+            });
+        return () => Linking.removeEventListener('url', _handleUrl);
+    }, []);
 
     return (
         <View style={styles.container}>
